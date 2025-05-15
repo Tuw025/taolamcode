@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhân Ma Trận - Giải Thích Chi Tiết</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-top: 30px;
+        }
+        .matrix-container {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .matrix-box {
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f8fafc;
+        }
+        table {
+            border-collapse: collapse;
+            margin: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+            min-width: 40px;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        input {
+            width: 50px;
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #fdecea;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .explanation {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border-left: 5px solid #3498db;
+        }
+        .step {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .highlight {
+            background-color: #fffde7;
+            font-weight: bold;
+        }
+        .matrix-notation {
+            font-family: 'Cambria Math', serif;
+            font-size: 1.1em;
+        }
+        .calculation {
+            font-family: monospace;
+            background-color: #f5f5f5;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .visualization {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .arrow {
+            font-size: 24px;
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <h1>Nhân Hai Ma Trận - Giải Thích Chi Tiết</h1>
+    
+    <div class="matrix-container">
+        <div class="matrix-box">
+            <h2>Ma trận A</h2>
+            <div>
+                Hàng: <input type="number" id="rowsA" min="1" value="2">
+                Cột: <input type="number" id="colsA" min="1" value="3">
+                <button onclick="createMatrix('A')">Tạo ma trận</button>
+                <button onclick="randomizeMatrix('A')">Giá trị ngẫu nhiên</button>
+            </div>
+            <div id="matrixA"></div>
+        </div>
+        
+        <div class="matrix-box">
+            <h2>Ma trận B</h2>
+            <div>
+                Hàng: <input type="number" id="rowsB" min="1" value="3">
+                Cột: <input type="number" id="colsB" min="1" value="2">
+                <button onclick="createMatrix('B')">Tạo ma trận</button>
+                <button onclick="randomizeMatrix('B')">Giá trị ngẫu nhiên</button>
+            </div>
+            <div id="matrixB"></div>
+        </div>
+    </div>
+    
+    <div style="text-align: center;">
+        <button onclick="multiplyMatrices()" style="padding: 12px 25px; font-size: 18px;">Nhân Ma Trận</button>
+    </div>
+    
+    <div id="error" class="error" style="display: none;"></div>
+    
+    <div id="resultContainer" style="display: none;">
+        <h2>Kết quả (A × B)</h2>
+        <div id="resultMatrix"></div>
+    </div>
+    
+    <div class="explanation">
+        <h2>Giải Thích Chi Tiết Cách Nhân Ma Trận</h2>
+        <p>Phép nhân ma trận chỉ thực hiện được khi <strong>số cột của ma trận A</strong> bằng <strong>số hàng của ma trận B</strong>.</p>
+        <p class="matrix-notation">Nếu A là ma trận m×n và B là ma trận n×p thì ma trận kết quả C sẽ có kích thước m×p.</p>
+        
+        <div class="step">
+            <h3>Công thức tổng quát</h3>
+            <p>Mỗi phần tử C[i][j] được tính bằng:</p>
+            <div class="calculation">
+                C[i][j] = A[i][1]×B[1][j] + A[i][2]×B[2][j] + ... + A[i][n]×B[n][j]
+            </div>
+            <p>Hay viết gọn lại:</p>
+            <div class="calculation">
+                C[i][j] = Σ (A[i][k] × B[k][j]) với k chạy từ 1 đến n
+            </div>
+        </div>
+        
+        <div id="dimensionCheck"></div>
+        <div id="calculationSteps"></div>
+        <div id="visualExplanation"></div>
+    </div>
+
+    <script>
+        // Tạo ma trận với các ô input
+        function createMatrix(matrixId) {
+            const rows = parseInt(document.getElementById(`rows${matrixId}`).value);
+            const cols = parseInt(document.getElementById(`cols${matrixId}`).value);
+            const container = document.getElementById(`matrix${matrixId}`);
+            
+            let table = '<table><tr><th></th>';
+            // Tạo header cột
+            for (let j = 0; j < cols; j++) {
+                table += `<th>Cột ${j+1}</th>`;
+            }
+            table += '</tr>';
+            
+            for (let i = 0; i < rows; i++) {
+                table += `<tr><th>Hàng ${i+1}</th>`;
+                for (let j = 0; j < cols; j++) {
+                    table += `<td><input type="number" id="${matrixId}_${i}_${j}" value="0"></td>`;
+                }
+                table += '</tr>';
+            }
+            table += '</table>';
+            
+            container.innerHTML = table;
+        }
+        
+        // Điền giá trị ngẫu nhiên cho ma trận
+        function randomizeMatrix(matrixId) {
+            const rows = parseInt(document.getElementById(`rows${matrixId}`).value);
+            const cols = parseInt(document.getElementById(`cols${matrixId}`).value);
+            
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const randomValue = Math.floor(Math.random() * 10) - 2; // Giá trị từ -2 đến 7
+                    document.getElementById(`${matrixId}_${i}_${j}`).value = randomValue;
+                }
+            }
+        }
+        
+        // Hàm nhân ma trận với giải thích chi tiết
+        function multiplyMatrices() {
+            const errorElement = document.getElementById('error');
+            errorElement.style.display = 'none';
+            errorElement.textContent = '';
+            
+            // Lấy kích thước ma trận
+            const rowsA = parseInt(document.getElementById('rowsA').value);
+            const colsA = parseInt(document.getElementById('colsA').value);
+            const rowsB = parseInt(document.getElementById('rowsB').value);
+            const colsB = parseInt(document.getElementById('colsB').value);
+            
+            // Kiểm tra điều kiện nhân ma trận
+            const dimensionCheck = document.getElementById('dimensionCheck');
+            dimensionCheck.innerHTML = `
+                <div class="step">
+                    <h3>Kiểm tra điều kiện nhân ma trận</h3>
+                    <p>Ma trận A có kích thước: ${rowsA}×${colsA}</p>
+                    <p>Ma trận B có kích thước: ${rowsB}×${colsB}</p>
+                    <p>Phép nhân thực hiện được khi <strong>số cột của A</strong> (${colsA}) 
+                    bằng <strong>số hàng của B</strong> (${rowsB})</p>
+            `;
+            
+            if (colsA !== rowsB) {
+                errorElement.textContent = `Không thể nhân ma trận: Số cột của A (${colsA}) không bằng số hàng của B (${rowsB})!`;
+                errorElement.style.display = 'block';
+                document.getElementById('resultContainer').style.display = 'none';
+                dimensionCheck.innerHTML += `
+                    <p class="error">✖ Không thỏa mãn điều kiện nhân ma trận!</p>
+                `;
+                return;
+            } else {
+                dimensionCheck.innerHTML += `
+                    <p class="highlight">✔ Điều kiện thỏa mãn! Có thể thực hiện phép nhân.</p>
+                    <p>Ma trận kết quả C sẽ có kích thước: ${rowsA}×${colsB}</p>
+                `;
+            }
+            
+            // Đọc giá trị ma trận
+            const matrixA = readMatrix('A', rowsA, colsA);
+            const matrixB = readMatrix('B', rowsB, colsB);
+            
+            // Hiển thị ma trận đầu vào
+            displayInputMatrices(matrixA, matrixB);
+            
+            // Khởi tạo ma trận kết quả
+            const result = initializeResultMatrix(rowsA, colsB);
+            
+            // Thực hiện phép nhân và giải thích từng bước
+            performMultiplication(matrixA, matrixB, result, rowsA, colsB, colsA);
+            
+            // Hiển thị kết quả
+            displayResultMatrix(result);
+        }
+        
+        // Đọc giá trị từ ma trận input
+        function readMatrix(matrixId, rows, cols) {
+            const matrix = [];
+            for (let i = 0; i < rows; i++) {
+                matrix[i] = [];
+                for (let j = 0; j < cols; j++) {
+                    const value = document.getElementById(`${matrixId}_${i}_${j}`).value;
+                    matrix[i][j] = value === '' ? 0 : parseFloat(value);
+                }
+            }
+            return matrix;
+        }
+        
+        // Hiển thị ma trận đầu vào
+        function displayInputMatrices(matrixA, matrixB) {
+            const visualExplanation = document.getElementById('visualExplanation');
+            visualExplanation.innerHTML = `
+                <div class="step">
+                    <h3>Ma trận đầu vào</h3>
+                    <div class="visualization">
+                        <div>
+                            <h4>Ma trận A</h4>
+                            ${renderMatrix(matrixA)}
+                        </div>
+                        <div class="arrow">×</div>
+                        <div>
+                            <h4>Ma trận B</h4>
+                            ${renderMatrix(matrixB)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Khởi tạo ma trận kết quả
+        function initializeResultMatrix(rows, cols) {
+            const result = [];
+            for (let i = 0; i < rows; i++) {
+                result[i] = new Array(cols).fill(0);
+            }
+            return result;
+        }
+        
+        // Thực hiện phép nhân và giải thích từng bước
+        function performMultiplication(matrixA, matrixB, result, rowsA, colsB, n) {
+            const calculationSteps = document.getElementById('calculationSteps');
+            let stepsHTML = `
+                <div class="step">
+                    <h3>Các bước tính toán chi tiết</h3>
+                    <p>Chúng ta sẽ tính từng phần tử của ma trận kết quả C:</p>
+            `;
+            
+            for (let i = 0; i < rowsA; i++) {
+                for (let j = 0; j < colsB; j++) {
+                    stepsHTML += `
+                        <div class="step">
+                            <h4>Tính C[${i+1}][${j+1}]:</h4>
+                            <p>Lấy <strong>hàng ${i+1}</strong> của A nhân với <strong>cột ${j+1}</strong> của B:</p>
+                            <div class="visualization">
+                                <div>
+                                    <p>Hàng ${i+1} của A:</p>
+                                    ${renderMatrixRow(matrixA, i)}
+                                </div>
+                                <div class="arrow">×</div>
+                                <div>
+                                    <p>Cột ${j+1} của B:</p>
+                                    ${renderMatrixColumn(matrixB, j)}
+                                </div>
+                            </div>
+                            <p>Thực hiện phép tính:</p>
+                            <div class="calculation">
+                    `;
+                    
+                    let calculation = '';
+                    let sum = 0;
+                    for (let k = 0; k < n; k++) {
+                        const a = matrixA[i][k];
+                        const b = matrixB[k][j];
+                        sum += a * b;
+                        
+                        calculation += `${a} × ${b}`;
+                        if (k < n - 1) calculation += ' + ';
+                        
+                        // Highlight cặp phần tử đang được nhân
+                        highlightElements('A', i, k, true);
+                        highlightElements('B', k, j, true);
+                        
+                        // Thêm từng bước nhỏ vào giải thích
+                        stepsHTML += `${a} × ${b} = ${a*b}`;
+                        if (k < n - 1) stepsHTML += '; ';
+                        
+                        // Bỏ highlight sau khi hiển thị
+                        setTimeout(() => {
+                            highlightElements('A', i, k, false);
+                            highlightElements('B', k, j, false);
+                        }, 1000);
+                    }
+                    
+                    result[i][j] = sum;
+                    stepsHTML += `
+                            </div>
+                            <p>Kết quả: ${calculation} = <strong>${sum}</strong></p>
+                        </div>
+                    `;
+                }
+            }
+            
+            calculationSteps.innerHTML = stepsHTML;
+        }
+        
+        // Hiển thị ma trận kết quả
+        function displayResultMatrix(result) {
+            const resultContainer = document.getElementById('resultContainer');
+            const resultMatrix = document.getElementById('resultMatrix');
+            
+            resultMatrix.innerHTML = `
+                <div class="visualization">
+                    ${renderMatrix(result)}
+                </div>
+            `;
+            resultContainer.style.display = 'block';
+        }
+        
+        // Render ma trận dạng HTML
+        function renderMatrix(matrix) {
+            let html = '<table><tr><th></th>';
+            // Header cột
+            for (let j = 0; j < matrix[0].length; j++) {
+                html += `<th>Cột ${j+1}</th>`;
+            }
+            html += '</tr>';
+            
+            // Các hàng
+            for (let i = 0; i < matrix.length; i++) {
+                html += `<tr><th>Hàng ${i+1}</th>`;
+                for (let j = 0; j < matrix[i].length; j++) {
+                    html += `<td>${matrix[i][j]}</td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            return html;
+        }
+        
+        // Render một hàng của ma trận
+        function renderMatrixRow(matrix, rowIndex) {
+            let html = '<table><tr>';
+            for (let j = 0; j < matrix[rowIndex].length; j++) {
+                html += `<td>${matrix[rowIndex][j]}</td>`;
+            }
+            html += '</tr></table>';
+            return html;
+        }
+        
+        // Render một cột của ma trận
+        function renderMatrixColumn(matrix, colIndex) {
+            let html = '<table>';
+            for (let i = 0; i < matrix.length; i++) {
+                html += `<tr><td>${matrix[i][colIndex]}</td></tr>`;
+            }
+            html += '</table>';
+            return html;
+        }
+        
+        // Highlight phần tử đang được tính toán
+        function highlightElements(matrixId, row, col, highlight) {
+            const element = document.getElementById(`${matrixId}_${row}_${col}`);
+            if (element) {
+                element.style.backgroundColor = highlight ? '#fffde7' : '';
+                element.style.transition = 'background-color 0.5s';
+            }
+        }
+        
+        // Khởi tạo ma trận mặc định khi trang tải
+        window.onload = function() {
+            createMatrix('A');
+            createMatrix('B');
+        };
+    </script>
+</body>
+</html>
